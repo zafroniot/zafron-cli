@@ -26,3 +26,26 @@ export interface CreateDeviceInput {
   serial: string;
   type: string;
 }
+
+export interface Measurement {
+  _id: string;
+  value: number;
+  array_value?: unknown[];
+  timestamp: string;
+  metadata: {
+    channel: string;
+    deviceId: string;
+    name: string;
+    owner: string;
+    serial: string;
+    type: string;
+    unit: string;
+  };
+}
+
+export interface MeasurementsResponse {
+  readings: Measurement[];
+  totalPages: number;
+  currentPage: number;
+  count: number;
+}
