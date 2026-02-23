@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { loginCommand } from './commands/login.js';
+import { devicesCommand } from './commands/devices/index.js';
 
 const program = new Command();
 
@@ -9,5 +10,6 @@ program
   .version('0.1.0');
 
 program.addCommand(loginCommand);
+program.addCommand(devicesCommand);
 
 program.parse();
