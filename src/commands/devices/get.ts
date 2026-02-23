@@ -2,26 +2,8 @@ import { Command } from 'commander';
 import { ApiClient } from '../../lib/api-client.js';
 import { getConfig } from '../../lib/config.js';
 import * as out from '../../lib/output.js';
+import { formatLastOnline } from '../../lib/output.js';
 import type { Device } from '../../types/device.js';
-
-function formatLastOnline(dateStr?: string): string {
-  if (!dateStr) return 'Never';
-
-  const now = Date.now();
-  const then = new Date(dateStr).getTime();
-  const diffMs = now - then;
-
-  if (diffMs < 60_000) return 'Just now';
-
-  const diffMin = Math.floor(diffMs / 60_000);
-  if (diffMin < 60) return `${diffMin} min ago`;
-
-  const diffHours = Math.floor(diffMs / 3_600_000);
-  if (diffHours < 24) return `${diffHours} hours ago`;
-
-  const diffDays = Math.floor(diffMs / 86_400_000);
-  return `${diffDays} days ago`;
-}
 
 export const getCommand = new Command('get')
   .description('Get device details')

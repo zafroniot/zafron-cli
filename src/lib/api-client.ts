@@ -54,7 +54,8 @@ export class ApiClient {
       throw new ApiError(message, response.status);
     }
 
-    return response.json();
+    const text = await response.text();
+    return text ? JSON.parse(text) : undefined;
   }
 
   async get(path: string): Promise<unknown> {
