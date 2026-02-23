@@ -1,0 +1,33 @@
+{
+  "name": "zafron",
+  "version": "0.1.0",
+  "description": "CLI tool for the Zafron IoT platform",
+  "main": "dist/index.js",
+  "bin": {
+    "zafron": "./bin/zafron"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest"
+  },
+  "keywords": [
+    "zafron",
+    "iot",
+    "cli"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "cli-table3": "^0.6.5",
+    "commander": "^14.0.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.3.0",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
+  }
+}
