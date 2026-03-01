@@ -4,14 +4,53 @@ A command-line interface for the [Zafron](https://zafron.dev) IoT platform. Mana
 
 ## Installation
 
+### Option 1: Pre-built Binaries (Recommended)
+
+Download the latest binary for your operating system from the [Releases](https://github.com/zafroniot/zafron-cli/releases) page:
+
+**macOS:**
+```bash
+# Intel Macs
+curl -L https://github.com/zafroniot/zafron-cli/releases/latest/download/zafron-macos-x64 -o zafron
+chmod +x zafron
+sudo mv zafron /usr/local/bin/
+
+# Apple Silicon (M1/M2/M3)
+curl -L https://github.com/zafroniot/zafron-cli/releases/latest/download/zafron-macos-arm64 -o zafron
+chmod +x zafron
+sudo mv zafron /usr/local/bin/
+```
+
+**Linux:**
+```bash
+# x64
+curl -L https://github.com/zafroniot/zafron-cli/releases/latest/download/zafron-linux-x64 -o zafron
+chmod +x zafron
+sudo mv zafron /usr/local/bin/
+
+# ARM64 (Raspberry Pi, etc.)
+curl -L https://github.com/zafroniot/zafron-cli/releases/latest/download/zafron-linux-arm64 -o zafron
+chmod +x zafron
+sudo mv zafron /usr/local/bin/
+```
+
+**Windows:**
+```powershell
+# Download and add to PATH
+# Or use winget/scoop (coming soon)
+```
+Download `zafron-win-x64.exe` from the releases page and add it to your PATH.
+
+### Option 2: npm
+
 ```bash
 npm install -g zafron
 ```
 
-For development:
+### Option 3: From Source
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/zafroniot/zafron-cli.git
 cd zafron-cli
 npm install
 npm run build
@@ -125,6 +164,27 @@ npm run build    # Compile TypeScript
 npm run dev      # Watch mode
 npm test         # Run tests
 ```
+
+### Building Binaries
+
+To create standalone executables for distribution:
+
+```bash
+# Build for all platforms
+npm run build:all
+
+# Or build for specific platforms
+npm run build:macos    # macOS (Intel + Apple Silicon)
+npm run build:linux    # Linux (x64 + ARM64)
+npm run build:windows  # Windows (x64)
+```
+
+Binaries will be output to `dist/binaries/`:
+- `zafron-macos-x64` - macOS Intel
+- `zafron-macos-arm64` - macOS Apple Silicon
+- `zafron-linux-x64` - Linux x64
+- `zafron-linux-arm64` - Linux ARM64
+- `zafron-win-x64.exe` - Windows x64
 
 ### Project Structure
 
