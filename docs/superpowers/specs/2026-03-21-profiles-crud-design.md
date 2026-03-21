@@ -12,9 +12,17 @@ Add full CRUD commands for device profiles: `zafron profiles list|get|create|upd
 - `PATCH /api/profiles/:id` — update: `{ name?, source?, image? }`
 - `DELETE /api/profiles/:id` — delete
 
+## API Notes
+
+- The API returns `source` as a populated object `{ _id, name, ... }` in GET responses, but create/update payloads send only the source `_id` string.
+- `GET /api/profiles` returns the full Profile shape (all fields). The existing `devices create` command only uses `_id` and `name` from Profile — expanding the interface is safe.
+- `profiles create` fetches sources via `GET /api/sources`, cast to `SourcesResponse` from `src/types/source.ts`.
+
 ## Commands
 
 ### `profiles list`
+
+Query: `GET /api/profiles?page=1&limit=50` (hardcoded pagination, same as sources list).
 
 Table columns: ID, Name, Source (display source name), Image, Created.
 
@@ -68,11 +76,15 @@ At least one flag required. Error: `"No update flags provided. Use --name, --sou
 
 Validate `--image` against allowed list. No interactive prompts — flags only (matches devices update pattern).
 
+On success: `out.success('Profile updated')` (no `--json`, matches devices update pattern).
+
 ### `profiles delete <id>`
 
 Confirmation prompt: `Are you sure you want to delete "<profile.name>"? (y/N):`
 
 Flags: `-y, --yes` to skip confirmation.
+
+On success: `out.success('Profile deleted')` (no `--json`, matches devices delete pattern).
 
 ## Types
 
