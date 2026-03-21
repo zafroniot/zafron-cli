@@ -6,6 +6,30 @@ import { getConfig } from '../../lib/config.js';
 import * as out from '../../lib/output.js';
 import type { Device, CreateDeviceInput } from '../../types/device.js';
 
+const DEVICE_TYPES = ['mqtt', 'lora'] as const;
+type DeviceType = typeof DEVICE_TYPES[number];
+
+export function validateType(value: string): DeviceType {
+  const normalized = value.toLowerCase().trim();
+  if (normalized !== 'mqtt' && normalized !== 'lora') {
+    throw new Error("Invalid device type. Must be 'mqtt' or 'lora'.");
+  }
+  return normalized;
+}
+
+export function validateSerial(serial: string, type: DeviceType): string {
+  if (type === 'lora') {
+    if (!/^[0-9a-fA-F]{16}$/.test(serial)) {
+      throw new Error('DevEUI must be exactly 16 hex characters.');
+    }
+  } else {
+    if (serial.length < 6 || serial.length > 16) {
+      throw new Error('Serial must be 6-16 characters.');
+    }
+  }
+  return serial;
+}
+
 async function promptMissing(
   options: { name?: string; serial?: string; type?: string },
 ): Promise<CreateDeviceInput> {
