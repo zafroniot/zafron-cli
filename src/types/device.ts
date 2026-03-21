@@ -26,7 +26,7 @@ export interface CreateDeviceInput {
   name: string;
   serial: string;
   type: string;
-  profile?: string;
+  profile: string;
 }
 
 export interface Measurement {
