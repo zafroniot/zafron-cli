@@ -13,6 +13,7 @@ export interface Device {
   name: string;
   serial: string;
   type: string;
+  profile?: string;
   enabled: boolean;
   owner: string;
   lastOnline?: string;
@@ -25,6 +26,7 @@ export interface CreateDeviceInput {
   name: string;
   serial: string;
   type: string;
+  profile?: string;
 }
 
 export interface Measurement {
@@ -48,4 +50,17 @@ export interface MeasurementsResponse {
   totalPages: number;
   currentPage: number;
   count: number;
+}
+
+export interface Profile {
+  _id: string;
+  name: string;
+}
+
+export interface ProfilesResponse {
+  total: number;
+  pages: number;
+  page: number;
+  limit: number;
+  data: Profile[];
 }
