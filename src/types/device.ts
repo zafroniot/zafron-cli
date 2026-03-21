@@ -55,6 +55,22 @@ export interface MeasurementsResponse {
 export interface Profile {
   _id: string;
   name: string;
+  source: {
+    _id: string;
+    name: string;
+  };
+  image: string;
+  decoder_type: string;
+  decoder: string;
+  owner: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateProfileInput {
+  name: string;
+  source: string;
+  image: string;
 }
 
 export interface ProfilesResponse {
