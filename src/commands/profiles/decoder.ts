@@ -5,6 +5,21 @@ import { getConfig } from '../../lib/config.js';
 import * as out from '../../lib/output.js';
 import type { Profile } from '../../types/device.js';
 
+interface DecodeResponse {
+  decoded: {
+    channel: string;
+    name: string;
+    value: number;
+    unit: string;
+    type: string;
+  }[];
+  errors: {
+    message: string;
+    path: unknown[];
+    stack: string;
+  }[];
+}
+
 export function validateDecoder(content: string): void {
   if (!/function\s+decode\s*\(/.test(content)) {
     throw new Error("Decoder must contain a 'decode' function.");
@@ -90,8 +105,63 @@ const setCommand = new Command('set')
     }
   });
 
+const testCommand = new Command('test')
+  .description('Test a decoder with a payload')
+  .argument('<id>', 'profile ID')
+  .requiredOption('--payload <string>', 'base64 or hex encoded payload')
+  .option('--fport <number>', 'LoRaWAN fPort number', '1')
+  .option('--hex', 'payload is hex encoded')
+  .option('--json', 'output raw JSON response')
+  .action(async (id: string, options) => {
+    try {
+      const config = await getConfig();
+
+      if (!config.token) {
+        out.error('Not logged in. Run `zafron login` first.');
+        process.exit(1);
+      }
+
+      const client = new ApiClient(config.apiUrl, config.token);
+      const body = {
+        payload: options.payload,
+        fPort: parseInt(options.fport, 10),
+      };
+
+      const response = (await client.post(`/api/profiles/${id}/decode`, body)) as DecodeResponse;
+
+      if (options.json) {
+        out.printJson(response);
+        return;
+      }
+
+      if (response.decoded && response.decoded.length > 0) {
+        const rows = response.decoded.map((d) => [
+          d.channel,
+          d.name,
+          String(d.value),
+          d.unit,
+          d.type,
+        ]);
+        out.printTable(['Channel', 'Name', 'Value', 'Unit', 'Type'], rows);
+      } else if (!response.errors || response.errors.length === 0) {
+        console.log('No output from decoder.');
+      }
+
+      if (response.errors && response.errors.length > 0) {
+        console.log('\nValidation warnings:');
+        for (const err of response.errors) {
+          console.log(`  - ${err.message}`);
+        }
+      }
+    } catch (err) {
+      out.error(err instanceof Error ? err.message : String(err));
+      process.exit(1);
+    }
+  });
+
 export const decoderCommand = new Command('decoder')
   .description('Manage profile decoder scripts');
 
 decoderCommand.addCommand(getCommand);
 decoderCommand.addCommand(setCommand);
+decoderCommand.addCommand(testCommand);
